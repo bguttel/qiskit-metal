@@ -137,6 +137,7 @@ class QMainWindowExtensionBase(QMainWindow):
     def get_screenshot(self,
                        name='shot',
                        type_='png',
+                       save=True,
                        display=True,
                        disp_ops=None):
         """Grad a screenshot of the main window, save to file, copy to
@@ -145,6 +146,7 @@ class QMainWindowExtensionBase(QMainWindow):
         Args:
             name (string): File name without extension
             type_ (string): File format and name extension
+            save (bool): Indicates whether to save the screenshot or not
             display (bool): Indicates whether to visualize or not in jupyter notebook
             disp_ops (dict): Used to pass options to IPython.display.Image (example: width)
         """
@@ -153,7 +155,8 @@ class QMainWindowExtensionBase(QMainWindow):
 
         # grab the main window
         screenshot = self.grab()  # type: QtGui.QPixMap
-        screenshot.save(str(path), type_)
+        if save:
+            screenshot.save(str(path), type_)
 
         # copy to clipboard
         QtWidgets.QApplication.clipboard().setPixmap(screenshot)
@@ -550,9 +553,9 @@ class QMainWindowBaseHandler():
         except Exception as e:
             self.logger.error(f'_load_stylesheet_from_file error: {e}')
 
-    def screenshot(self, name='shot', type_='png', display=True, disp_ops=None):
+    def screenshot(self, name='shot', type_='png', save=True, display=True, disp_ops=None):
         """Alias for get_screenshot()."""
-        self.main_window.get_screenshot(name, type_, display, disp_ops)
+        self.main_window.get_screenshot(name, type_, save, display, disp_ops)
 
     def save_file(self):
         """Save file. Called on exit.
